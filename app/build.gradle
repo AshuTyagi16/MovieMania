@@ -19,10 +19,39 @@ android {
 }
 
 dependencies {
+    final SUPPORT_LIBRARY_VERSION = '26.1.0'
+    final RETROFIT_VERSION = '2.4.0'
+    final OKHTTP_VERSION = '3.10.0'
+    final PICASSO_VERSION = '2.71828'
+    final BUTTERKNIFE_VERSION = '8.8.1'
+
+    //Test
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    //Support
+    implementation "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support:cardview-v7:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support.constraint:constraint-layout:1.1.0"
+    implementation "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
+
+    //Network
+    implementation "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    implementation "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
+    implementation "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
+    implementation "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
+
+    //ButterKnife
+    implementation "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
+
+    //Picasso
+    implementation "com.squareup.picasso:picasso:$PICASSO_VERSION"
+
+    //Data
+    implementation "com.google.code.gson:gson:2.8.2"
 }
