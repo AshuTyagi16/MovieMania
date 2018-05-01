@@ -52,12 +52,12 @@ public class MovieManiaApi {
 
     /********Api Calls********/
 
-    public Call<Result> getPopularMovies(String api_key) {
-        return service.getPopularMovies(api_key);
+    public Call<Result> getPopularMovies(String api_key, int page) {
+        return service.getPopularMovies(api_key, page);
     }
 
-    public Call<Result> getTopRatedMovies(String api_key) {
-        return service.getTopRatedMovies(api_key);
+    public Call<Result> getTopRatedMovies(String api_key, int page) {
+        return service.getTopRatedMovies(api_key, page);
     }
 
     /********Interceptor********/

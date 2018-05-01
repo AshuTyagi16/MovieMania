@@ -3,4 +3,9 @@
 
     <!-- Content Description -->
     <string name="thumbnail">Thumbnail</string>
+    <string name="placeholder">Placeholder</string>
+
+    <!-- Loading Placeholder -->
+    <string name="total_items_loaded">Total items loaded:</string>
+    <string name="loading_more">Loading more…</string>
 </resources>

@@ -54,4 +54,15 @@ dependencies {
 
     //Data
     implementation "com.google.code.gson:gson:2.8.2"
+
+    /********Others********/
+
+    //Progress Bar
+    implementation 'com.github.castorflex.smoothprogressbar:library-circular:1.3.0'
+
+    //Pagination
+    implementation 'com.github.markomilos:paginate:0.5.1'
+
+    //Recyclerview Animation
+    implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
 }

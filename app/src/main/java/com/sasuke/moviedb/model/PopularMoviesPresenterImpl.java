@@ -23,9 +23,9 @@ public class PopularMoviesPresenterImpl implements PopularMoviesPresenter {
     }
 
     @Override
-    public void getPopularMovies(String api_key) {
+    public void getPopularMovies(String api_key, int page) {
         if (NetworkManager.getInstance().isConnected()) {
-            MovieManiaApi.getInstance().getPopularMovies(api_key).enqueue(new Callback<Result>() {
+            MovieManiaApi.getInstance().getPopularMovies(api_key, page).enqueue(new Callback<Result>() {
                 @Override
                 public void onResponse(Call<Result> call, Response<Result> response) {
                     mPopularMoviesView.onGetPopularMoviesSuccess(response.body());

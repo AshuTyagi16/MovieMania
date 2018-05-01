@@ -9,6 +9,7 @@ import com.sasuke.moviedb.model.pojo.Movie;
 import com.sasuke.moviedb.model.pojo.Result;
 import com.sasuke.moviedb.view.MoviesViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesViewHolder> {
 
-    private List<Movie> mMovieList;
+    private List<Movie> mMovieList = new ArrayList<>();
 
     @Override
     public MoviesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -37,7 +38,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesViewHolder> {
 
     public void setMovies(Result result) {
         if (result.getMovies() != null)
-            this.mMovieList = result.getMovies();
+            this.mMovieList.addAll(result.getMovies());
         notifyDataSetChanged();
     }
 }

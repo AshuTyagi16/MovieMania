@@ -5,5 +5,5 @@ package com.sasuke.moviedb.presenter;
  */
 
 public interface PopularMoviesPresenter {
-    void getPopularMovies(String api_key);
+    void getPopularMovies(String api_key, int page);
 }
