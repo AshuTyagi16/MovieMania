@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.sasuke.moviedb"
         minSdkVersion 17
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -19,7 +19,7 @@ android {
 }
 
 dependencies {
-    final SUPPORT_LIBRARY_VERSION = '26.1.0'
+    final SUPPORT_LIBRARY_VERSION = '27.1.1'
     final RETROFIT_VERSION = '2.4.0'
     final OKHTTP_VERSION = '3.10.0'
     final PICASSO_VERSION = '2.71828'
@@ -65,4 +65,11 @@ dependencies {
 
     //Recyclerview Animation
     implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
+
+    //Snackbar
+    implementation 'com.androidadvance:topsnackbar:1.1.1'
+
+    //EventBus
+    implementation 'org.greenrobot:eventbus:3.1.1'
+
 }

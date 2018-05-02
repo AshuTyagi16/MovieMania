@@ -10,6 +10,4 @@ public interface PopularMoviesView {
     void onGetPopularMoviesSuccess(Result result);
 
     void onGetPopularMoviesFailure(Throwable throwable);
-
-    void onShowNetworkConnectionError();
 }
