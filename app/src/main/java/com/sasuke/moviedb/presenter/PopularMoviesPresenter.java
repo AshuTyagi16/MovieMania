@@ -6,4 +6,6 @@ package com.sasuke.moviedb.presenter;
 
 public interface PopularMoviesPresenter {
     void getPopularMovies(String api_key, int page);
+
+    void getTopRatedMovies(String api_key, int page);
 }

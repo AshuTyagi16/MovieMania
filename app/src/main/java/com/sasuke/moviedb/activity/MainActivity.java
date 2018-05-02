@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -17,7 +18,6 @@ import com.sasuke.moviedb.R;
 import com.sasuke.moviedb.adapter.MoviesAdapter;
 import com.sasuke.moviedb.config.Constants;
 import com.sasuke.moviedb.event.NetworkChangedEvent;
-import com.sasuke.moviedb.manager.NetworkManager;
 import com.sasuke.moviedb.model.PopularMoviesPresenterImpl;
 import com.sasuke.moviedb.model.pojo.Result;
 import com.sasuke.moviedb.presenter.PopularMoviesPresenter;
@@ -66,6 +66,9 @@ public class MainActivity extends BaseActivity implements PopularMoviesView, Pag
 
     private TSnackbar mSnackbar;
 
+    private SORT_ORDER mSortOrder = SORT_ORDER.POPULAR;
+    private SORT_ORDER mLastSortOrder = mSortOrder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
@@ -83,7 +86,10 @@ public class MainActivity extends BaseActivity implements PopularMoviesView, Pag
 
     @Override
     public void onNetworkAvailable() {
-        mMoviesPresenter.getPopularMovies(Constants.API_KEY, INITIAL_PAGE);
+        if (mSortOrder == SORT_ORDER.POPULAR)
+            mMoviesPresenter.getPopularMovies(Constants.API_KEY, INITIAL_PAGE);
+        else if (mSortOrder == SORT_ORDER.TOP_RATED)
+            mMoviesPresenter.getTopRatedMovies(Constants.API_KEY, INITIAL_PAGE);
     }
 
     @Override
@@ -94,43 +100,34 @@ public class MainActivity extends BaseActivity implements PopularMoviesView, Pag
 
     @Override
     public void onGetPopularMoviesSuccess(Result result) {
-        mSnackbar.dismiss();
-        isFirstAttempt = false;
-        loading = false;
-        page++;
-        if (result != null) {
-            totalPages = result.getTotalPages();
-            mMoviesAdapter.setMovies(result);
-            mIvPlaceholder.setVisibility(View.GONE);
-            mPbMovies.setVisibility(View.GONE);
-            mRvMovies.setVisibility(View.VISIBLE);
-        }
+        handleSuccess(result);
+        mLastSortOrder = mSortOrder;
     }
 
     @Override
     public void onGetPopularMoviesFailure(Throwable throwable) {
-        loading = false;
-        if (!isNetworkAvailable) {
-            if (isFirstAttempt) {
-                buildSnackbar();
-                mSnackbar.show();
-                showNetworkFailurePlaceholder();
-            } else {
-                buildSnackbar();
-                mSnackbar.show();
-            }
-        } else {
-            if (isFirstAttempt)
-                showFailurePlaceholder();
-            Toast.makeText(this, getString(R.string.failed).concat(" ").concat(throwable.getMessage()), Toast.LENGTH_SHORT).show();
-        }
+        handleFailure(throwable);
+    }
+
+    @Override
+    public void onGetTopRatedSuccess(Result result) {
+        handleSuccess(result);
+        mLastSortOrder = mSortOrder;
+    }
+
+    @Override
+    public void onGetTopRatedFailure(Throwable throwable) {
+        handleFailure(throwable);
     }
 
     @Override
     public void onLoadMore() {
         loading = true;
         if (!isFirstAttempt) {
-            mMoviesPresenter.getPopularMovies(Constants.API_KEY, page);
+            if (mSortOrder == SORT_ORDER.POPULAR)
+                mMoviesPresenter.getPopularMovies(Constants.API_KEY, page);
+            else if (mSortOrder == SORT_ORDER.TOP_RATED)
+                mMoviesPresenter.getTopRatedMovies(Constants.API_KEY, page);
         }
     }
 
@@ -142,43 +139,6 @@ public class MainActivity extends BaseActivity implements PopularMoviesView, Pag
     @Override
     public boolean hasLoadedAllItems() {
         return page == totalPages;
-    }
-
-
-    private void showFailurePlaceholder() {
-        mPbMovies.setVisibility(View.GONE);
-        mRvMovies.setVisibility(View.GONE);
-        mIvPlaceholder.setImageResource(R.drawable.placeholder_error_occured);
-        mIvPlaceholder.setVisibility(View.VISIBLE);
-    }
-
-    private void showNetworkFailurePlaceholder() {
-        mPbMovies.setVisibility(View.GONE);
-        mRvMovies.setVisibility(View.GONE);
-        mIvPlaceholder.setImageResource(R.drawable.placeholder_no_internet_connection);
-        mIvPlaceholder.setVisibility(View.VISIBLE);
-    }
-
-    private void setPagination() {
-        if (paginate != null)
-            paginate.unbind();
-
-        paginate = Paginate.with(mRvMovies, this)
-                .addLoadingListItem(true)
-                .setLoadingListItemCreator(new LoadingListItemCreator())
-                .build();
-    }
-
-    private void buildSnackbar() {
-        mSnackbar = TSnackbar.make(mRlView, getString(R.string.no_internet_connection), TSnackbar.LENGTH_INDEFINITE);
-        mSnackbar.setAction(getString(R.string.retry), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMoviesPresenter.getPopularMovies(Constants.API_KEY, page);
-                mSnackbar.dismiss();
-            }
-        });
-        mSnackbar.setActionTextColor(ContextCompat.getColor(this, R.color.white));
     }
 
     @Override
@@ -196,10 +156,39 @@ public class MainActivity extends BaseActivity implements PopularMoviesView, Pag
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_sort_popular:
+                if (mLastSortOrder != SORT_ORDER.POPULAR) {
+                    mSortOrder = SORT_ORDER.POPULAR;
+                    page = INITIAL_PAGE;
+                    showInitialLoadingPlaceholder();
+                    mMoviesPresenter.getPopularMovies(Constants.API_KEY, page);
+                }
+                return true;
+            case R.id.menu_sort_top_rated:
+                if (mLastSortOrder != SORT_ORDER.TOP_RATED) {
+                    mSortOrder = SORT_ORDER.TOP_RATED;
+                    page = INITIAL_PAGE;
+                    showInitialLoadingPlaceholder();
+                    mMoviesPresenter.getTopRatedMovies(Constants.API_KEY, page);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onNetworkChangedEvent(NetworkChangedEvent event) {
         isNetworkAvailable = event.isNetworkAvailable;
-        Log.d("onNetworkChangedEvent", "Network Available: >>  " + isNetworkAvailable);
         if (!isNetworkAvailable) {
             buildSnackbar();
             mSnackbar.show();
@@ -208,8 +197,98 @@ public class MainActivity extends BaseActivity implements PopularMoviesView, Pag
                 mIvPlaceholder.setVisibility(View.GONE);
                 mPbMovies.setVisibility(View.VISIBLE);
             }
-            mMoviesPresenter.getPopularMovies(Constants.API_KEY, page);
+            if (mSortOrder == SORT_ORDER.POPULAR)
+                mMoviesPresenter.getPopularMovies(Constants.API_KEY, page);
+            else if (mSortOrder == SORT_ORDER.TOP_RATED)
+                mMoviesPresenter.getTopRatedMovies(Constants.API_KEY, page);
             mSnackbar.dismiss();
         }
+    }
+
+
+    private void showFailurePlaceholder() {
+        mPbMovies.setVisibility(View.GONE);
+        mRvMovies.setVisibility(View.GONE);
+        mIvPlaceholder.setImageResource(R.drawable.placeholder_error_occured);
+        mIvPlaceholder.setVisibility(View.VISIBLE);
+    }
+
+    private void showNetworkFailurePlaceholder() {
+        mPbMovies.setVisibility(View.GONE);
+        mRvMovies.setVisibility(View.GONE);
+        mIvPlaceholder.setImageResource(R.drawable.placeholder_no_internet_connection);
+        mIvPlaceholder.setVisibility(View.VISIBLE);
+    }
+
+    private void showInitialLoadingPlaceholder() {
+        mIvPlaceholder.setVisibility(View.GONE);
+        mRvMovies.setVisibility(View.GONE);
+        mPbMovies.setVisibility(View.VISIBLE);
+    }
+
+    private void setPagination() {
+        if (paginate != null)
+            paginate.unbind();
+
+        paginate = Paginate.with(mRvMovies, this)
+                .addLoadingListItem(true)
+                .setLoadingListItemCreator(new LoadingListItemCreator())
+                .build();
+    }
+
+    private void buildSnackbar() {
+        mSnackbar = TSnackbar.make(mRlView, getString(R.string.no_internet_connection), TSnackbar.LENGTH_INDEFINITE);
+        mSnackbar.setAction(getString(R.string.retry), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSortOrder == SORT_ORDER.POPULAR)
+                    mMoviesPresenter.getPopularMovies(Constants.API_KEY, page);
+                else if (mSortOrder == SORT_ORDER.TOP_RATED)
+                    mMoviesPresenter.getTopRatedMovies(Constants.API_KEY, page);
+                mSnackbar.dismiss();
+            }
+        });
+        mSnackbar.setActionTextColor(ContextCompat.getColor(this, R.color.white));
+    }
+
+    private void handleFailure(Throwable throwable) {
+        loading = false;
+        if (!isNetworkAvailable) {
+            if (isFirstAttempt) {
+                buildSnackbar();
+                mSnackbar.show();
+                showNetworkFailurePlaceholder();
+            } else {
+                buildSnackbar();
+                mSnackbar.show();
+            }
+        } else {
+            if (isFirstAttempt)
+                showFailurePlaceholder();
+            Toast.makeText(this, getString(R.string.failed).concat(" ").concat(throwable.getMessage()), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void handleSuccess(Result result) {
+        mSnackbar.dismiss();
+        isFirstAttempt = false;
+        loading = false;
+        page++;
+        if (result != null) {
+            totalPages = result.getTotalPages();
+
+            if (mLastSortOrder == mSortOrder) {
+                mMoviesAdapter.setMovies(result);
+            } else
+                mMoviesAdapter.updateAllMovies(result);
+
+            mIvPlaceholder.setVisibility(View.GONE);
+            mPbMovies.setVisibility(View.GONE);
+            mRvMovies.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private enum SORT_ORDER {
+        POPULAR, TOP_RATED
     }
 }

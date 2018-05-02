@@ -35,4 +35,19 @@ public class PopularMoviesPresenterImpl implements PopularMoviesPresenter {
             }
         });
     }
+
+    @Override
+    public void getTopRatedMovies(String api_key, int page) {
+        MovieManiaApi.getInstance().getTopRatedMovies(api_key, page).enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                mPopularMoviesView.onGetTopRatedSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                mPopularMoviesView.onGetTopRatedFailure(t);
+            }
+        });
+    }
 }
