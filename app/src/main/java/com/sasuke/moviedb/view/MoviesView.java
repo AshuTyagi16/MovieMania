@@ -6,7 +6,7 @@ import com.sasuke.moviedb.model.pojo.Result;
  * Created by abc on 5/1/2018.
  */
 
-public interface PopularMoviesView {
+public interface MoviesView {
     void onGetPopularMoviesSuccess(Result result);
 
     void onGetPopularMoviesFailure(Throwable throwable);

@@ -14,18 +14,17 @@ import android.widget.Toast;
 
 import com.androidadvance.topsnackbar.TSnackbar;
 import com.paginate.Paginate;
-import com.sasuke.moviedb.MovieMania;
 import com.sasuke.moviedb.R;
 import com.sasuke.moviedb.adapter.MoviesAdapter;
 import com.sasuke.moviedb.config.Constants;
 import com.sasuke.moviedb.event.NetworkChangedEvent;
-import com.sasuke.moviedb.model.PopularMoviesPresenterImpl;
+import com.sasuke.moviedb.model.MoviesPresenterImpl;
 import com.sasuke.moviedb.model.pojo.Result;
-import com.sasuke.moviedb.presenter.PopularMoviesPresenter;
+import com.sasuke.moviedb.presenter.MoviesPresenter;
 import com.sasuke.moviedb.util.ItemDecorator;
 import com.sasuke.moviedb.util.LoadingListItemCreator;
 import com.sasuke.moviedb.util.NetworkChangeReceiver;
-import com.sasuke.moviedb.view.PopularMoviesView;
+import com.sasuke.moviedb.view.MoviesView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -35,9 +34,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
-public class MainActivity extends BaseActivity implements PopularMoviesView, Paginate.Callbacks {
+public class MainActivity extends BaseActivity implements MoviesView, Paginate.Callbacks, MoviesAdapter.OnItemClickListener {
 
     @BindView(R.id.rl)
     RelativeLayout mRlView;
@@ -48,7 +46,7 @@ public class MainActivity extends BaseActivity implements PopularMoviesView, Pag
     @BindView(R.id.iv_placeholder)
     ImageView mIvPlaceholder;
 
-    private PopularMoviesPresenter mMoviesPresenter;
+    private MoviesPresenter mMoviesPresenter;
 
     private static final int INITIAL_PAGE = 1;
     private static final int SPAN_COUNT = 2;
@@ -75,11 +73,12 @@ public class MainActivity extends BaseActivity implements PopularMoviesView, Pag
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mMoviesPresenter = new PopularMoviesPresenterImpl(this);
+        mMoviesPresenter = new MoviesPresenterImpl(this);
         mRvMovies.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
         mRvMovies.addItemDecoration(new ItemDecorator(SPACING));
         mRvMovies.setItemAnimator(new SlideInLeftAnimator());
         mMoviesAdapter = new MoviesAdapter();
+        mMoviesAdapter.setOnItemClickListener(MainActivity.this);
         mRvMovies.setAdapter(mMoviesAdapter);
         setPagination();
         buildSnackbar();
@@ -288,6 +287,11 @@ public class MainActivity extends BaseActivity implements PopularMoviesView, Pag
             mPbMovies.setVisibility(View.GONE);
             mRvMovies.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onItemClick(int movieId) {
+        startActivity(MovieDetailActivity.newIntent(this, movieId));
     }
 
     private enum SORT_ORDER {

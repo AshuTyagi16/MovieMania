@@ -21,16 +21,34 @@ public class MoviesViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.iv_thumbnail)
     ImageView mIvThumbnail;
 
+    private OnItemClickListener mOnItemClickListener;
+    private int movieId;
+
     public MoviesViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mOnItemClickListener.onItemClick(movieId);
+            }
+        });
     }
 
     public void setMovie(Movie movie) {
+        movieId = movie.getId();
         Picasso.get()
                 .load(Constants.IMAGE_BASE_URL.concat(movie.getPosterPath()))
                 .placeholder(R.drawable.placeholder_image_loading)
                 .error(R.drawable.placeholder_image_error)
                 .into(mIvThumbnail);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int movieId);
     }
 }

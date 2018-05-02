@@ -16,9 +16,10 @@ import java.util.List;
  * Created by abc on 5/1/2018.
  */
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesViewHolder> {
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesViewHolder> implements MoviesViewHolder.OnItemClickListener {
 
     private List<Movie> mMovieList = new ArrayList<>();
+    private OnItemClickListener mOnItemClickListener;
 
     @Override
     public MoviesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -29,6 +30,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesViewHolder> {
     @Override
     public void onBindViewHolder(MoviesViewHolder holder, int position) {
         holder.setMovie(mMovieList.get(position));
+        holder.setOnItemClickListener(this);
     }
 
     @Override
@@ -48,5 +50,18 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesViewHolder> {
             this.mMovieList.addAll(result.getMovies());
         }
         notifyDataSetChanged();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
+    }
+
+    @Override
+    public void onItemClick(int movieId) {
+        mOnItemClickListener.onItemClick(movieId);
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int movieId);
     }
 }

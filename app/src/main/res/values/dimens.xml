@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Text Sizes -->
-    <dimen name="text_size_extra_small">10dp</dimen>
-    <dimen name="text_size_small">12dp</dimen>
-    <dimen name="text_size_normal">14dp</dimen>
-    <dimen name="text_size_large">16dp</dimen>
-    <dimen name="text_size_extra_large">18dp</dimen>
+    <dimen name="text_size_extra_small">10sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_normal">14sp</dimen>
+    <dimen name="text_size_large">16sp</dimen>
+    <dimen name="text_size_extra_large">18sp</dimen>
+    <dimen name="text_size_heading_large">28sp</dimen>
 
     <!-- Items RecyclerView -->
     <dimen name="item_list_spacing">2dp</dimen>

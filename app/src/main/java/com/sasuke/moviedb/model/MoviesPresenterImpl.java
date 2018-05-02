@@ -2,8 +2,8 @@ package com.sasuke.moviedb.model;
 
 import com.sasuke.moviedb.model.pojo.Result;
 import com.sasuke.moviedb.network.MovieManiaApi;
-import com.sasuke.moviedb.presenter.PopularMoviesPresenter;
-import com.sasuke.moviedb.view.PopularMoviesView;
+import com.sasuke.moviedb.presenter.MoviesPresenter;
+import com.sasuke.moviedb.view.MoviesView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -13,12 +13,12 @@ import retrofit2.Response;
  * Created by abc on 5/1/2018.
  */
 
-public class PopularMoviesPresenterImpl implements PopularMoviesPresenter {
+public class MoviesPresenterImpl implements MoviesPresenter {
 
-    private PopularMoviesView mPopularMoviesView;
+    private MoviesView mMoviesView;
 
-    public PopularMoviesPresenterImpl(PopularMoviesView popularMoviesView) {
-        this.mPopularMoviesView = popularMoviesView;
+    public MoviesPresenterImpl(MoviesView moviesView) {
+        this.mMoviesView = moviesView;
     }
 
     @Override
@@ -26,12 +26,12 @@ public class PopularMoviesPresenterImpl implements PopularMoviesPresenter {
         MovieManiaApi.getInstance().getPopularMovies(api_key, page).enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
-                mPopularMoviesView.onGetPopularMoviesSuccess(response.body());
+                mMoviesView.onGetPopularMoviesSuccess(response.body());
             }
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
-                mPopularMoviesView.onGetPopularMoviesFailure(t);
+                mMoviesView.onGetPopularMoviesFailure(t);
             }
         });
     }
@@ -41,12 +41,12 @@ public class PopularMoviesPresenterImpl implements PopularMoviesPresenter {
         MovieManiaApi.getInstance().getTopRatedMovies(api_key, page).enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
-                mPopularMoviesView.onGetTopRatedSuccess(response.body());
+                mMoviesView.onGetTopRatedSuccess(response.body());
             }
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
-                mPopularMoviesView.onGetTopRatedFailure(t);
+                mMoviesView.onGetTopRatedFailure(t);
             }
         });
     }
