@@ -1,12 +1,18 @@
 package com.sasuke.moviedb.network;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.sasuke.moviedb.MovieMania;
 import com.sasuke.moviedb.config.Constants;
 import com.sasuke.moviedb.model.pojo.Result;
+import com.sasuke.moviedb.network.interceptor.CacheInterceptor;
+import com.sasuke.moviedb.network.interceptor.OfflineCacheInterceptor;
 
+import java.io.File;
+
+import okhttp3.Cache;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -39,15 +45,20 @@ public class MovieManiaApi {
     }
 
     private void init() {
-        Gson gson = new GsonBuilder().create();
-        OkHttpClient httpClient = createHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(httpClient)
+        service = new Retrofit.Builder()
                 .baseUrl(BASE_API_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        service = retrofit.create(MovieManiaApiInterface.class);
+                .client(createHttpClient())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(builder.addInterceptor(provideOfflineCacheInterceptor())
+                        .addNetworkInterceptor(provideCacheInterceptor())
+                        .cache(provideCache())
+                        .build())
+                .build()
+                .create(MovieManiaApiInterface.class);
+
+//        service = retrofit.create(MovieManiaApiInterface.class);
     }
 
     /********Api Calls********/
@@ -59,6 +70,24 @@ public class MovieManiaApi {
     public Call<Result> getTopRatedMovies(String api_key, int page) {
         return service.getTopRatedMovies(api_key, page);
     }
+
+    /****** Caching******/
+    private static Cache provideCache() {
+        try {
+            return new Cache(new File(MovieMania.getAppContext().getCacheDir(), "http-cache"), 10 * 1000 * 1000);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private Interceptor provideCacheInterceptor() {
+        return new CacheInterceptor();
+    }
+
+    private Interceptor provideOfflineCacheInterceptor() {
+        return new OfflineCacheInterceptor();
+    }
+
 
     /********Interceptor********/
 

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.androidadvance.topsnackbar.TSnackbar;
 import com.paginate.Paginate;
+import com.sasuke.moviedb.MovieMania;
 import com.sasuke.moviedb.R;
 import com.sasuke.moviedb.adapter.MoviesAdapter;
 import com.sasuke.moviedb.config.Constants;
@@ -33,6 +34,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class MainActivity extends BaseActivity implements PopularMoviesView, Paginate.Callbacks {
@@ -76,7 +78,7 @@ public class MainActivity extends BaseActivity implements PopularMoviesView, Pag
         mMoviesPresenter = new PopularMoviesPresenterImpl(this);
         mRvMovies.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
         mRvMovies.addItemDecoration(new ItemDecorator(SPACING));
-        mRvMovies.setItemAnimator(new SlideInUpAnimator());
+        mRvMovies.setItemAnimator(new SlideInLeftAnimator());
         mMoviesAdapter = new MoviesAdapter();
         mRvMovies.setAdapter(mMoviesAdapter);
         setPagination();
