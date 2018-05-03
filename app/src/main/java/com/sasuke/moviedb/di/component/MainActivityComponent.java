@@ -7,6 +7,7 @@ import com.sasuke.moviedb.di.module.MainActivityModule;
 import com.sasuke.moviedb.di.scope.PerActivityScope;
 import com.sasuke.moviedb.presenter.MoviesPresenter;
 import com.sasuke.moviedb.util.ItemDecorator;
+import com.sasuke.moviedb.util.LoadingListItemCreator;
 import com.sasuke.moviedb.util.NetworkChangeReceiver;
 
 import dagger.Component;
@@ -28,4 +29,6 @@ public interface MainActivityComponent {
     GridLayoutManager getGridLayoutManager();
 
     NetworkChangeReceiver getNetworkChangeReceiver();
+
+    LoadingListItemCreator getLoadingListItemCreator();
 }

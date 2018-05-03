@@ -17,4 +17,10 @@
     <!-- Movie Detail -->
     <string name="mark_as_favourite">Mark as \nfavourite</string>
     <string name="remove_from_favourite">Remove from \nfavourite</string>
+
+    <!-- Main Activity -->
+    <string name="already_sorted_by_popular">Already sorted by popular</string>
+    <string name="already_sorted_by_rating">Already sorted by rating</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top Rated</string>
 </resources>

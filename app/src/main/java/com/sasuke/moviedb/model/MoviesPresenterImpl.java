@@ -41,7 +41,7 @@ public class MoviesPresenterImpl implements MoviesPresenter {
 
     @Override
     public void getTopRatedMovies(String api_key, int page) {
-        MovieMania.getAppContext().getMovieManiaService().getTopRatedMovies(api_key, page).enqueue(new Callback<Result>() {
+        movieManiaService.getTopRatedMovies(api_key, page).enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
                 mMoviesView.onGetTopRatedSuccess(response.body());

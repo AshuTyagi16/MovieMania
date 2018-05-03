@@ -1,5 +1,7 @@
 package com.sasuke.moviedb.config;
 
+import com.sasuke.moviedb.activity.MainActivity;
+
 /**
  * Created by abc on 5/1/2018.
  */
@@ -15,4 +17,7 @@ public class Constants {
 
     public static final int SPACING = 0;
     public static final int SPAN_COUNT = 2;
+
+    public static final int INITIAL_PAGE = 1;
+
 }

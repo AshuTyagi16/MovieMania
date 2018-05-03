@@ -49,21 +49,19 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
     @BindView(R.id.iv_placeholder)
     ImageView mIvPlaceholder;
 
-    private MoviesPresenter mMoviesPresenter;
-
-    private static final int INITIAL_PAGE = 1;
-
-    private MoviesAdapter mMoviesAdapter;
-
     private Paginate paginate;
     private boolean loading = false;
     private int totalPages;
-    private int page = INITIAL_PAGE;
+    private int page = Constants.INITIAL_PAGE;
     private boolean isFirstAttempt = true;
 
     private boolean isNetworkAvailable;
 
+
+    private MoviesPresenter mMoviesPresenter;
+    private MoviesAdapter mMoviesAdapter;
     private NetworkChangeReceiver mReciever;
+    private LoadingListItemCreator mLoadingListItemCreator;
 
     private SORT_ORDER mSortOrder = SORT_ORDER.POPULAR;
     private SORT_ORDER mLastSortOrder = mSortOrder;
@@ -83,9 +81,11 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
         mRvMovies.addItemDecoration(component.getItemDecorator());
         mRvMovies.setItemAnimator(new SlideInLeftAnimator());
         mMoviesAdapter = component.getMoviesAdapter();
+        mLoadingListItemCreator = component.getLoadingListItemCreator();
         mMoviesAdapter.setOnItemClickListener(MainActivity.this);
         mRvMovies.setAdapter(mMoviesAdapter);
         mReciever = component.getNetworkChangeReceiver();
+        setActionBarTitle(getString(R.string.popular));
         super.onCreate(savedInstanceState);
     }
 
@@ -96,7 +96,7 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
 
     @Override
     public void onNetworkFailed() {
-        if (!PreferenceManager.getInstance().isDataInCache())
+        if (!MovieMania.get(this).getPreferenceManager().isDataInCache())
             showNetworkFailurePlaceholder();
         else {
             setPagination();
@@ -169,18 +169,24 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
         switch (item.getItemId()) {
             case R.id.menu_sort_popular:
                 if (mLastSortOrder != SORT_ORDER.POPULAR) {
+                    setActionBarTitle(getString(R.string.popular));
                     mSortOrder = SORT_ORDER.POPULAR;
-                    page = INITIAL_PAGE;
+                    page = Constants.INITIAL_PAGE;
                     showInitialLoadingPlaceholder();
                     mMoviesPresenter.getPopularMovies(Constants.API_KEY, page);
+                } else {
+                    Toast.makeText(this, getString(R.string.already_sorted_by_popular), Toast.LENGTH_SHORT).show();
                 }
                 return true;
             case R.id.menu_sort_top_rated:
                 if (mLastSortOrder != SORT_ORDER.TOP_RATED) {
+                    setActionBarTitle(getString(R.string.top_rated));
                     mSortOrder = SORT_ORDER.TOP_RATED;
-                    page = INITIAL_PAGE;
+                    page = Constants.INITIAL_PAGE;
                     showInitialLoadingPlaceholder();
                     mMoviesPresenter.getTopRatedMovies(Constants.API_KEY, page);
+                } else {
+                    Toast.makeText(this, getString(R.string.already_sorted_by_rating), Toast.LENGTH_SHORT).show();
                 }
                 return true;
             default:
@@ -230,7 +236,7 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
 
         paginate = Paginate.with(mRvMovies, this)
                 .addLoadingListItem(true)
-                .setLoadingListItemCreator(new LoadingListItemCreator())
+                .setLoadingListItemCreator(mLoadingListItemCreator)
                 .build();
     }
 
@@ -251,7 +257,7 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
     }
 
     private void handleSuccess(Result result) {
-        PreferenceManager.getInstance().updateCacheStatus(true);
+        MovieMania.get(this).getPreferenceManager().updateCacheStatus(true);
         dismissSnackbar();
         isFirstAttempt = false;
         loading = false;
@@ -268,6 +274,11 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
             mPbMovies.setVisibility(View.GONE);
             mRvMovies.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void setActionBarTitle(String title) {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(title);
     }
 
     @Override

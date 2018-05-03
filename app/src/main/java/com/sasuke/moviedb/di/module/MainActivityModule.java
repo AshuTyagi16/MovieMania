@@ -12,6 +12,7 @@ import com.sasuke.moviedb.model.MoviesPresenterImpl;
 import com.sasuke.moviedb.network.MovieManiaService;
 import com.sasuke.moviedb.presenter.MoviesPresenter;
 import com.sasuke.moviedb.util.ItemDecorator;
+import com.sasuke.moviedb.util.LoadingListItemCreator;
 import com.sasuke.moviedb.util.NetworkChangeReceiver;
 import com.sasuke.moviedb.view.MoviesView;
 import com.squareup.picasso.Picasso;
@@ -68,5 +69,11 @@ public class MainActivityModule {
     @PerActivityScope
     public MovieManiaDatabaseAdapter getDatabaseAdapter() {
         return MovieManiaDatabaseAdapter.getInstance(mainActivity);
+    }
+
+    @Provides
+    @PerActivityScope
+    public LoadingListItemCreator getLoadingListItemCreator() {
+        return new LoadingListItemCreator();
     }
 }
