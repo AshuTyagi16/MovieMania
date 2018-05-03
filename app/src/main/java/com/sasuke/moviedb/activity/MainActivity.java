@@ -33,6 +33,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
@@ -49,6 +51,19 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
     @BindView(R.id.iv_placeholder)
     ImageView mIvPlaceholder;
 
+    @Inject
+    MoviesPresenter mMoviesPresenter;
+    @Inject
+    MoviesAdapter mMoviesAdapter;
+    @Inject
+    NetworkChangeReceiver mReciever;
+    @Inject
+    LoadingListItemCreator mLoadingListItemCreator;
+    @Inject
+    ItemDecorator mItemDecorator;
+    @Inject
+    GridLayoutManager mGridLayoutManager;
+
     private Paginate paginate;
     private boolean loading = false;
     private int totalPages;
@@ -56,13 +71,6 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
     private boolean isFirstAttempt = true;
 
     private boolean isNetworkAvailable;
-
-
-    private MoviesPresenter mMoviesPresenter;
-    private MoviesAdapter mMoviesAdapter;
-    private NetworkChangeReceiver mReciever;
-    private LoadingListItemCreator mLoadingListItemCreator;
-
     private SORT_ORDER mSortOrder = SORT_ORDER.POPULAR;
     private SORT_ORDER mLastSortOrder = mSortOrder;
 
@@ -76,15 +84,13 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
                 .movieManiaApplicationComponent(MovieMania.get(this).getApplicationComponent())
                 .build();
 
-        mMoviesPresenter = component.getMoviesPresenter();
-        mRvMovies.setLayoutManager(component.getGridLayoutManager());
-        mRvMovies.addItemDecoration(component.getItemDecorator());
+        component.injectMainActivity(this);
+
+        mRvMovies.setLayoutManager(mGridLayoutManager);
+        mRvMovies.addItemDecoration(mItemDecorator);
         mRvMovies.setItemAnimator(new SlideInLeftAnimator());
-        mMoviesAdapter = component.getMoviesAdapter();
-        mLoadingListItemCreator = component.getLoadingListItemCreator();
         mMoviesAdapter.setOnItemClickListener(MainActivity.this);
         mRvMovies.setAdapter(mMoviesAdapter);
-        mReciever = component.getNetworkChangeReceiver();
         setActionBarTitle(getString(R.string.popular));
         super.onCreate(savedInstanceState);
     }

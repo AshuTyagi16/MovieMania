@@ -30,6 +30,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -62,17 +64,18 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
     @BindView(R.id.iv_add_to_favoutite)
     ImageView mIvAddToFav;
 
-    private int mMovieId;
-
     private static final String EXTRA_MOVIE_ID = "movie_id";
 
-    private MovieDetailPresenter mMovieDetailPresenter;
+    private int mMovieId;
 
-    private MovieManiaDatabaseAdapter mDatabaseAdapter;
+    @Inject
+    MovieDetailPresenter mMovieDetailPresenter;
 
-    private Picasso picasso;
+    @Inject
+    MovieManiaDatabaseAdapter mDatabaseAdapter;
 
-    private int movieId;
+    @Inject
+    Picasso picasso;
 
     @Override
     protected int getLayoutResId() {
@@ -98,9 +101,7 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
                 .movieManiaApplicationComponent(MovieMania.get(getActivity()).getApplicationComponent())
                 .build();
 
-        mMovieDetailPresenter = component.getMovieDetailPresenter();
-        mDatabaseAdapter = component.getDatabaseAdapter();
-        picasso = component.getPicasso();
+        component.injectMovieDetailFragment(this);
     }
 
     @Override
@@ -116,7 +117,7 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
     @Override
     public void onGetMovieDetailSuccess(MovieDetail movieDetail) {
         if (movieDetail != null) {
-            movieId = movieDetail.getId();
+            mMovieId = movieDetail.getId();
             mTvMovieName.setText(movieDetail.getTitle());
 
             picasso
@@ -161,12 +162,12 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
 
     @OnClick(R.id.btn_mark_as_favourite)
     public void onFavouriteClick() {
-        if (MovieManiaDatabaseManager.isFavourite(mDatabaseAdapter, movieId)) {
-            MovieManiaDatabaseManager.removeFromFavourites(mDatabaseAdapter, movieId);
+        if (MovieManiaDatabaseManager.isFavourite(mDatabaseAdapter, mMovieId)) {
+            MovieManiaDatabaseManager.removeFromFavourites(mDatabaseAdapter, mMovieId);
             mIvAddToFav.setImageResource(R.drawable.ic_favorite_disabled);
             mBtnFavourite.setText(getString(R.string.mark_as_favourite));
         } else {
-            MovieManiaDatabaseManager.addToFavourites(mDatabaseAdapter, movieId);
+            MovieManiaDatabaseManager.addToFavourites(mDatabaseAdapter, mMovieId);
             mIvAddToFav.setImageResource(R.drawable.ic_favouite);
             mBtnFavourite.setText(getString(R.string.remove_from_favourite));
         }

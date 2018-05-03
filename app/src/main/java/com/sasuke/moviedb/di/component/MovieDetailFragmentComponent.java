@@ -1,10 +1,8 @@
 package com.sasuke.moviedb.di.component;
 
-import com.sasuke.moviedb.db.MovieManiaDatabaseAdapter;
 import com.sasuke.moviedb.di.module.MovieDetailFragmentModule;
 import com.sasuke.moviedb.di.scope.PerActivityScope;
-import com.sasuke.moviedb.presenter.MovieDetailPresenter;
-import com.squareup.picasso.Picasso;
+import com.sasuke.moviedb.fragment.MovieDetailFragment;
 
 import dagger.Component;
 
@@ -16,9 +14,5 @@ import dagger.Component;
 @Component(modules = MovieDetailFragmentModule.class, dependencies = MovieManiaApplicationComponent.class)
 public interface MovieDetailFragmentComponent {
 
-    MovieDetailPresenter getMovieDetailPresenter();
-
-    MovieManiaDatabaseAdapter getDatabaseAdapter();
-
-    Picasso getPicasso();
+    void injectMovieDetailFragment(MovieDetailFragment movieDetailFragment);
 }
