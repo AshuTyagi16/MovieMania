@@ -9,4 +9,13 @@
         android:layout_height="250dp"
         android:contentDescription="@string/thumbnail"
         android:scaleType="fitXY" />
+
+    <ImageView
+        android:id="@+id/iv_add_to_favoutite"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignBottom="@id/iv_thumbnail"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="15dp" />
 </RelativeLayout>

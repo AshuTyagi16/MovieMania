@@ -1,7 +1,6 @@
 package com.sasuke.moviedb.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +11,8 @@ import android.widget.TextView;
 
 import com.sasuke.moviedb.R;
 import com.sasuke.moviedb.config.Constants;
+import com.sasuke.moviedb.db.MovieManiaDatabaseAdapter;
+import com.sasuke.moviedb.db.MovieManiaDatabaseManager;
 import com.sasuke.moviedb.model.MovieDetailPresenterImpl;
 import com.sasuke.moviedb.model.pojo.MovieDetail;
 import com.sasuke.moviedb.presenter.MovieDetailPresenter;
@@ -25,6 +26,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by abc on 5/3/2018.
@@ -52,12 +54,18 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
     ProgressBar mPbMovieDetail;
     @BindView(R.id.iv_placeholder)
     ImageView mIvPlaceholder;
+    @BindView(R.id.iv_add_to_favoutite)
+    ImageView mIvAddToFav;
 
     private int mMovieId;
 
     private static final String EXTRA_MOVIE_ID = "movie_id";
 
     private MovieDetailPresenter mMovieDetailPresenter;
+
+    private MovieManiaDatabaseAdapter mDatabaseAdapter;
+
+    private int movieId;
 
     @Override
     protected int getLayoutResId() {
@@ -78,6 +86,7 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
         if (getArguments() != null)
             mMovieId = getArguments().getInt(EXTRA_MOVIE_ID);
         mMovieDetailPresenter = new MovieDetailPresenterImpl(this);
+        mDatabaseAdapter = MovieManiaDatabaseAdapter.getInstance(getContext());
     }
 
     @Override
@@ -93,15 +102,19 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
     @Override
     public void onGetMovieDetailSuccess(MovieDetail movieDetail) {
         if (movieDetail != null) {
+            movieId = movieDetail.getId();
             mTvMovieName.setText(movieDetail.getTitle());
+
             Picasso.get()
                     .load(Constants.IMAGE_BASE_URL.concat(movieDetail.getPosterPath()))
                     .placeholder(R.drawable.placeholder_image_loading)
                     .error(R.drawable.placeholder_error_occured)
                     .into(mIvThumbnail);
+
             mTvOverview.setText(movieDetail.getOverview());
             mTvRating.setText(String.valueOf(movieDetail.getVoteAverage()).concat("/").concat("10"));
             mTvTotalTime.setText(String.valueOf(movieDetail.getRuntime()).concat(" ").concat("MIN"));
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             Date parse = null;
             try {
@@ -112,6 +125,15 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
             Calendar c = Calendar.getInstance();
             c.setTime(parse);
             mTvYear.setText(String.valueOf(c.get(Calendar.YEAR)));
+
+            if (MovieManiaDatabaseManager.isFavourite(mDatabaseAdapter, movieDetail.getId())) {
+                mIvAddToFav.setImageResource(R.drawable.ic_favouite);
+                mBtnFavourite.setText(getString(R.string.remove_from_favourite));
+            } else {
+                mIvAddToFav.setImageResource(R.drawable.ic_favorite_disabled);
+                mBtnFavourite.setText(getString(R.string.mark_as_favourite));
+            }
+
             mPbMovieDetail.setVisibility(View.GONE);
             mIvPlaceholder.setVisibility(View.GONE);
             mRlContent.setVisibility(View.VISIBLE);
@@ -121,6 +143,19 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
     @Override
     public void onGetMovieDetailFailure(Throwable throwable) {
         showFailurePlaceholder();
+    }
+
+    @OnClick(R.id.btn_mark_as_favourite)
+    public void onFavouriteClick() {
+        if (MovieManiaDatabaseManager.isFavourite(mDatabaseAdapter, movieId)) {
+            MovieManiaDatabaseManager.removeFromFavourites(mDatabaseAdapter, movieId);
+            mIvAddToFav.setImageResource(R.drawable.ic_favorite_disabled);
+            mBtnFavourite.setText(getString(R.string.mark_as_favourite));
+        } else {
+            MovieManiaDatabaseManager.addToFavourites(mDatabaseAdapter, movieId);
+            mIvAddToFav.setImageResource(R.drawable.ic_favouite);
+            mBtnFavourite.setText(getString(R.string.remove_from_favourite));
+        }
     }
 
     private void showFailurePlaceholder() {

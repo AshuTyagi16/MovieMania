@@ -16,4 +16,5 @@
 
     <!-- Movie Detail -->
     <string name="mark_as_favourite">Mark as \nfavourite</string>
+    <string name="remove_from_favourite">Remove from \nfavourite</string>
 </resources>
