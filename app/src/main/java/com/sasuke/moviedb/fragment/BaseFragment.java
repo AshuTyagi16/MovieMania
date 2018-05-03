@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sasuke.moviedb.MovieMania;
 import com.sasuke.moviedb.model.NetworkPresenterImpl;
 import com.sasuke.moviedb.presenter.NetworkPresenter;
 import com.sasuke.moviedb.view.NetworkView;
@@ -36,7 +37,7 @@ public abstract class BaseFragment extends Fragment implements NetworkView {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutResId(), container, false);
         ButterKnife.bind(this, view);
-        mNetworkPresenter = new NetworkPresenterImpl(this);
+        mNetworkPresenter = new NetworkPresenterImpl(this, MovieMania.get(getActivity()).getNetworkManager());
         mNetworkPresenter.checkNetworkConnection();
         return view;
     }

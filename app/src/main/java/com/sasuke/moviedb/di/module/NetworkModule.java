@@ -6,6 +6,7 @@ import com.sasuke.moviedb.config.Constants;
 import com.sasuke.moviedb.di.qualifier.NetworkCacheQualifier;
 import com.sasuke.moviedb.di.qualifier.OfflineCacheQualifier;
 import com.sasuke.moviedb.di.scope.MovieManiaApplicationScope;
+import com.sasuke.moviedb.manager.NetworkManager;
 import com.sasuke.moviedb.network.interceptor.CacheInterceptor;
 import com.sasuke.moviedb.network.interceptor.OfflineCacheInterceptor;
 
@@ -69,8 +70,8 @@ public class NetworkModule {
     @Provides
     @MovieManiaApplicationScope
     @OfflineCacheQualifier
-    public Interceptor getOfflineCacheInterceptor() {
-        return new OfflineCacheInterceptor();
+    public Interceptor getOfflineCacheInterceptor(NetworkManager networkManager) {
+        return new OfflineCacheInterceptor(networkManager);
     }
 
     @Provides

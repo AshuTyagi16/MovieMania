@@ -11,9 +11,13 @@ import android.widget.TextView;
 
 import com.sasuke.moviedb.MovieMania;
 import com.sasuke.moviedb.R;
+import com.sasuke.moviedb.activity.MovieDetailActivity;
 import com.sasuke.moviedb.config.Constants;
 import com.sasuke.moviedb.db.MovieManiaDatabaseAdapter;
 import com.sasuke.moviedb.db.MovieManiaDatabaseManager;
+import com.sasuke.moviedb.di.component.DaggerMovieDetailFragmentComponent;
+import com.sasuke.moviedb.di.component.MovieDetailFragmentComponent;
+import com.sasuke.moviedb.di.module.MovieDetailFragmentModule;
 import com.sasuke.moviedb.model.MovieDetailPresenterImpl;
 import com.sasuke.moviedb.model.pojo.MovieDetail;
 import com.sasuke.moviedb.presenter.MovieDetailPresenter;
@@ -88,9 +92,15 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
         super.onCreate(savedInstanceState);
         if (getArguments() != null)
             mMovieId = getArguments().getInt(EXTRA_MOVIE_ID);
-        mMovieDetailPresenter = new MovieDetailPresenterImpl(this);
-        mDatabaseAdapter = MovieManiaDatabaseAdapter.getInstance(getContext());
-        picasso = MovieMania.getAppContext().getPicasso();
+
+        MovieDetailFragmentComponent component = DaggerMovieDetailFragmentComponent.builder()
+                .movieDetailFragmentModule(new MovieDetailFragmentModule((MovieDetailActivity) getActivity(), this))
+                .movieManiaApplicationComponent(MovieMania.get(getActivity()).getApplicationComponent())
+                .build();
+
+        mMovieDetailPresenter = component.getMovieDetailPresenter();
+        mDatabaseAdapter = component.getDatabaseAdapter();
+        picasso = component.getPicasso();
     }
 
     @Override

@@ -16,6 +16,9 @@ import com.sasuke.moviedb.MovieMania;
 import com.sasuke.moviedb.R;
 import com.sasuke.moviedb.adapter.MoviesAdapter;
 import com.sasuke.moviedb.config.Constants;
+import com.sasuke.moviedb.di.component.DaggerMainActivityComponent;
+import com.sasuke.moviedb.di.component.MainActivityComponent;
+import com.sasuke.moviedb.di.module.MainActivityModule;
 import com.sasuke.moviedb.event.NetworkChangedEvent;
 import com.sasuke.moviedb.manager.PreferenceManager;
 import com.sasuke.moviedb.model.MoviesPresenterImpl;
@@ -49,8 +52,6 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
     private MoviesPresenter mMoviesPresenter;
 
     private static final int INITIAL_PAGE = 1;
-    private static final int SPAN_COUNT = 2;
-    private static final int SPACING = 0;
 
     private MoviesAdapter mMoviesAdapter;
 
@@ -71,13 +72,20 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mMoviesPresenter = new MoviesPresenterImpl(this);
-        mRvMovies.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
-        mRvMovies.addItemDecoration(new ItemDecorator(SPACING));
+
+        MainActivityComponent component = DaggerMainActivityComponent.builder()
+                .mainActivityModule(new MainActivityModule(MainActivity.this, this))
+                .movieManiaApplicationComponent(MovieMania.get(this).getApplicationComponent())
+                .build();
+
+        mMoviesPresenter = component.getMoviesPresenter();
+        mRvMovies.setLayoutManager(component.getGridLayoutManager());
+        mRvMovies.addItemDecoration(component.getItemDecorator());
         mRvMovies.setItemAnimator(new SlideInLeftAnimator());
-        mMoviesAdapter = new MoviesAdapter(MovieMania.getAppContext().getPicasso());
+        mMoviesAdapter = component.getMoviesAdapter();
         mMoviesAdapter.setOnItemClickListener(MainActivity.this);
         mRvMovies.setAdapter(mMoviesAdapter);
+        mReciever = component.getNetworkChangeReceiver();
         super.onCreate(savedInstanceState);
     }
 
@@ -139,7 +147,6 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
     @Override
     protected void onStart() {
         super.onStart();
-        mReciever = new NetworkChangeReceiver();
         registerReceiver(mReciever, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
         EventBus.getDefault().register(this);
     }

@@ -1,5 +1,6 @@
 package com.sasuke.moviedb;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
@@ -7,6 +8,7 @@ import com.sasuke.moviedb.di.component.DaggerMovieManiaApplicationComponent;
 import com.sasuke.moviedb.di.component.MovieManiaApplicationComponent;
 import com.sasuke.moviedb.di.module.ContextModule;
 import com.sasuke.moviedb.di.module.PicassoModule;
+import com.sasuke.moviedb.manager.NetworkManager;
 import com.sasuke.moviedb.network.MovieManiaService;
 import com.squareup.picasso.Picasso;
 
@@ -22,6 +24,8 @@ public class MovieMania extends Application {
 
     private MovieManiaService movieManiaService;
     private Picasso picasso;
+    private NetworkManager networkManager;
+    private MovieManiaApplicationComponent component;
 
     @Override
     public void onCreate() {
@@ -29,23 +33,36 @@ public class MovieMania extends Application {
         instance = this;
         Timber.plant(new Timber.DebugTree());
 
-        MovieManiaApplicationComponent component = DaggerMovieManiaApplicationComponent.builder()
+        component = DaggerMovieManiaApplicationComponent.builder()
                 .contextModule(new ContextModule(this))
-                .picassoModule(new PicassoModule())
                 .build();
 
         movieManiaService = component.getMovieManiaService();
         picasso = component.getPicasso();
+        networkManager = component.getNetworkManager();
     }
 
     public static MovieMania getAppContext() {
         return instance;
     }
 
-    public Picasso getPicasso(){
+    public static MovieMania get(Activity activity) {
+        return (MovieMania) activity.getApplication();
+    }
+
+    public Picasso getPicasso() {
         return picasso;
     }
-    public MovieManiaService getMovieManiaService(){
+
+    public MovieManiaApplicationComponent getApplicationComponent() {
+        return component;
+    }
+
+    public MovieManiaService getMovieManiaService() {
         return movieManiaService;
+    }
+
+    public NetworkManager getNetworkManager() {
+        return networkManager;
     }
 }

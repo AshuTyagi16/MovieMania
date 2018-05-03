@@ -7,14 +7,16 @@ import com.sasuke.moviedb.view.NetworkView;
 public class NetworkPresenterImpl implements NetworkPresenter {
 
     private NetworkView mNetworkView;
+    private NetworkManager networkManager;
 
-    public NetworkPresenterImpl(NetworkView networkView) {
+    public NetworkPresenterImpl(NetworkView networkView, NetworkManager networkManager) {
+        this.networkManager = networkManager;
         this.mNetworkView = networkView;
     }
 
     @Override
     public void checkNetworkConnection() {
-        if (NetworkManager.getInstance().isConnected())
+        if (networkManager.isConnected())
             mNetworkView.onNetworkAvailable();
         else
             mNetworkView.onNetworkFailed();

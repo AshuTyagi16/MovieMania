@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.androidadvance.topsnackbar.TSnackbar;
+import com.sasuke.moviedb.MovieMania;
 import com.sasuke.moviedb.R;
 import com.sasuke.moviedb.config.Constants;
 import com.sasuke.moviedb.model.NetworkPresenterImpl;
@@ -26,7 +27,7 @@ public abstract class BaseActivity extends AppCompatActivity implements NetworkV
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mNetworkPresenter = new NetworkPresenterImpl(this);
+        mNetworkPresenter = new NetworkPresenterImpl(this, MovieMania.get(BaseActivity.this).getNetworkManager());
         mNetworkPresenter.checkNetworkConnection();
     }
 

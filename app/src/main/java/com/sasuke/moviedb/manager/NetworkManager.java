@@ -13,25 +13,14 @@ import com.sasuke.moviedb.MovieMania;
 
 public class NetworkManager {
 
-    private static volatile NetworkManager instance;
+    private Context context;
 
-    public static NetworkManager getInstance() {
-        if (instance == null) {
-            synchronized (NetworkManager.class) {
-                if (instance == null) {
-                    instance = new NetworkManager();
-                }
-            }
-        }
-        return instance;
-    }
-
-    private NetworkManager() {
-
+    public NetworkManager(Context context) {
+        this.context = context;
     }
 
     private ConnectivityManager getConnectivityManager() {
-        return (ConnectivityManager) MovieMania.getAppContext()
+        return (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 

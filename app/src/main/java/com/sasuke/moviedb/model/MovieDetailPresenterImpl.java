@@ -2,6 +2,7 @@ package com.sasuke.moviedb.model;
 
 import com.sasuke.moviedb.MovieMania;
 import com.sasuke.moviedb.model.pojo.MovieDetail;
+import com.sasuke.moviedb.network.MovieManiaService;
 import com.sasuke.moviedb.presenter.MovieDetailPresenter;
 import com.sasuke.moviedb.view.MovieDetailView;
 
@@ -16,14 +17,16 @@ import retrofit2.Response;
 public class MovieDetailPresenterImpl implements MovieDetailPresenter {
 
     private MovieDetailView mMovieDetailView;
+    private MovieManiaService movieManiaService;
 
-    public MovieDetailPresenterImpl(MovieDetailView movieDetailView) {
+    public MovieDetailPresenterImpl(MovieManiaService movieManiaService, MovieDetailView movieDetailView) {
+        this.movieManiaService = movieManiaService;
         this.mMovieDetailView = movieDetailView;
     }
 
     @Override
     public void getMovieDetail(String apiKey, int movieId) {
-        MovieMania.getAppContext().getMovieManiaService().getMovieDetail(movieId, apiKey).enqueue(new Callback<MovieDetail>() {
+        movieManiaService.getMovieDetail(movieId, apiKey).enqueue(new Callback<MovieDetail>() {
             @Override
             public void onResponse(Call<MovieDetail> call, Response<MovieDetail> response) {
                 mMovieDetailView.onGetMovieDetailSuccess(response.body());

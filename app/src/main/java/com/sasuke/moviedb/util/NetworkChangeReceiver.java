@@ -11,10 +11,16 @@ import org.greenrobot.eventbus.EventBus;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
+    private NetworkManager networkManager;
+
+    public NetworkChangeReceiver(NetworkManager networkManager) {
+        this.networkManager = networkManager;
+    }
+
     @Override
     public void onReceive(final Context context, final Intent intent) {
 
-        if (NetworkManager.getInstance().isConnected())
+        if (networkManager.isConnected())
             EventBus.getDefault().postSticky(new NetworkChangedEvent(true));
         else
             EventBus.getDefault().postSticky(new NetworkChangedEvent(false));

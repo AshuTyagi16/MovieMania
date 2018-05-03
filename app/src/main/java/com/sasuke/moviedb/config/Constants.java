@@ -12,4 +12,7 @@ public class Constants {
 
     public static final String CACHE_DIR = "http-cache";
     public static final int CACHE_SIZE = 100 * 1000 * 1000;  //100 MB
+
+    public static final int SPACING = 0;
+    public static final int SPAN_COUNT = 2;
 }

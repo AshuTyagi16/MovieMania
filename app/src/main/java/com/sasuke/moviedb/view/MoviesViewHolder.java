@@ -32,11 +32,11 @@ public class MoviesViewHolder extends RecyclerView.ViewHolder {
 
     private MovieManiaDatabaseAdapter mDatabaseAdapter;
 
-    public MoviesViewHolder(View itemView, Picasso picasso) {
+    public MoviesViewHolder(View itemView, Picasso picasso, MovieManiaDatabaseAdapter databaseAdapter) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         this.picasso = picasso;
-        mDatabaseAdapter = MovieManiaDatabaseAdapter.getInstance(itemView.getContext());
+        mDatabaseAdapter = databaseAdapter;
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
