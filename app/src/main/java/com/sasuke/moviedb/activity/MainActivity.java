@@ -20,8 +20,6 @@ import com.sasuke.moviedb.di.component.DaggerMainActivityComponent;
 import com.sasuke.moviedb.di.component.MainActivityComponent;
 import com.sasuke.moviedb.di.module.MainActivityModule;
 import com.sasuke.moviedb.event.NetworkChangedEvent;
-import com.sasuke.moviedb.manager.PreferenceManager;
-import com.sasuke.moviedb.model.MoviesPresenterImpl;
 import com.sasuke.moviedb.model.pojo.Result;
 import com.sasuke.moviedb.presenter.MoviesPresenter;
 import com.sasuke.moviedb.util.ItemDecorator;

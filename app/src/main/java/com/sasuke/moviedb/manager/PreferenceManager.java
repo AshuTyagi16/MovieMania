@@ -7,8 +7,6 @@ package com.sasuke.moviedb.manager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.sasuke.moviedb.MovieMania;
-
 import static android.content.Context.MODE_PRIVATE;
 
 /**

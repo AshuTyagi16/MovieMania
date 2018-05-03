@@ -16,7 +16,6 @@ public class LoadingListItemCreator implements com.paginate.recycler.LoadingList
 
     private Context mContext;
 
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();

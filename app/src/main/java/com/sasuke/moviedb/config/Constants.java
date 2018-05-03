@@ -1,7 +1,5 @@
 package com.sasuke.moviedb.config;
 
-import com.sasuke.moviedb.activity.MainActivity;
-
 /**
  * Created by abc on 5/1/2018.
  */

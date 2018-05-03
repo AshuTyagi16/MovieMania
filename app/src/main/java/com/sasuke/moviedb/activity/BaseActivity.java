@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.androidadvance.topsnackbar.TSnackbar;
 import com.sasuke.moviedb.MovieMania;
 import com.sasuke.moviedb.R;
-import com.sasuke.moviedb.config.Constants;
 import com.sasuke.moviedb.model.NetworkPresenterImpl;
 import com.sasuke.moviedb.presenter.NetworkPresenter;
 import com.sasuke.moviedb.view.NetworkView;

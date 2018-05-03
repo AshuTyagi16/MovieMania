@@ -2,16 +2,12 @@ package com.sasuke.moviedb;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 
 import com.sasuke.moviedb.di.component.DaggerMovieManiaApplicationComponent;
 import com.sasuke.moviedb.di.component.MovieManiaApplicationComponent;
 import com.sasuke.moviedb.di.module.ContextModule;
-import com.sasuke.moviedb.di.module.PicassoModule;
 import com.sasuke.moviedb.manager.NetworkManager;
 import com.sasuke.moviedb.manager.PreferenceManager;
-import com.sasuke.moviedb.network.MovieManiaService;
-import com.squareup.picasso.Picasso;
 
 import timber.log.Timber;
 

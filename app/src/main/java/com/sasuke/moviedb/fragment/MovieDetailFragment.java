@@ -18,7 +18,6 @@ import com.sasuke.moviedb.db.MovieManiaDatabaseManager;
 import com.sasuke.moviedb.di.component.DaggerMovieDetailFragmentComponent;
 import com.sasuke.moviedb.di.component.MovieDetailFragmentComponent;
 import com.sasuke.moviedb.di.module.MovieDetailFragmentModule;
-import com.sasuke.moviedb.model.MovieDetailPresenterImpl;
 import com.sasuke.moviedb.model.pojo.MovieDetail;
 import com.sasuke.moviedb.presenter.MovieDetailPresenter;
 import com.sasuke.moviedb.view.MovieDetailView;

@@ -1,6 +1,5 @@
 package com.sasuke.moviedb.network.interceptor;
 
-
 import com.sasuke.moviedb.manager.NetworkManager;
 
 import java.io.IOException;

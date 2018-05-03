@@ -1,6 +1,5 @@
 package com.sasuke.moviedb.model;
 
-import com.sasuke.moviedb.MovieMania;
 import com.sasuke.moviedb.model.pojo.Result;
 import com.sasuke.moviedb.network.MovieManiaService;
 import com.sasuke.moviedb.presenter.MoviesPresenter;
