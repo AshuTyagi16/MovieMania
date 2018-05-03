@@ -64,8 +64,6 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
 
     private NetworkChangeReceiver mReciever;
 
-    private TSnackbar mSnackbar;
-
     private SORT_ORDER mSortOrder = SORT_ORDER.POPULAR;
     private SORT_ORDER mLastSortOrder = mSortOrder;
 
@@ -81,7 +79,6 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
         mMoviesAdapter.setOnItemClickListener(MainActivity.this);
         mRvMovies.setAdapter(mMoviesAdapter);
         setPagination();
-        buildSnackbar();
         super.onCreate(savedInstanceState);
     }
 
@@ -191,8 +188,7 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
     public void onNetworkChangedEvent(NetworkChangedEvent event) {
         isNetworkAvailable = event.isNetworkAvailable;
         if (!isNetworkAvailable) {
-            buildSnackbar();
-            mSnackbar.show();
+            showSnackbar(mRlView);
         } else {
             if (isFirstAttempt) {
                 mIvPlaceholder.setVisibility(View.GONE);
@@ -202,7 +198,7 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
                 mMoviesPresenter.getPopularMovies(Constants.API_KEY, page);
             else if (mSortOrder == SORT_ORDER.TOP_RATED)
                 mMoviesPresenter.getTopRatedMovies(Constants.API_KEY, page);
-            mSnackbar.dismiss();
+            dismissSnackbar();
         }
     }
 
@@ -237,31 +233,14 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
                 .build();
     }
 
-    private void buildSnackbar() {
-        mSnackbar = TSnackbar.make(mRlView, getString(R.string.no_internet_connection), TSnackbar.LENGTH_INDEFINITE);
-        mSnackbar.setAction(getString(R.string.retry), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mSortOrder == SORT_ORDER.POPULAR)
-                    mMoviesPresenter.getPopularMovies(Constants.API_KEY, page);
-                else if (mSortOrder == SORT_ORDER.TOP_RATED)
-                    mMoviesPresenter.getTopRatedMovies(Constants.API_KEY, page);
-                mSnackbar.dismiss();
-            }
-        });
-        mSnackbar.setActionTextColor(ContextCompat.getColor(this, R.color.white));
-    }
-
     private void handleFailure(Throwable throwable) {
         loading = false;
         if (!isNetworkAvailable) {
             if (isFirstAttempt) {
-                buildSnackbar();
-                mSnackbar.show();
+                showSnackbar(mRlView);
                 showNetworkFailurePlaceholder();
             } else {
-                buildSnackbar();
-                mSnackbar.show();
+                showSnackbar(mRlView);
             }
         } else {
             if (isFirstAttempt)
@@ -271,7 +250,7 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
     }
 
     private void handleSuccess(Result result) {
-        mSnackbar.dismiss();
+        dismissSnackbar();
         isFirstAttempt = false;
         loading = false;
         page++;
@@ -292,6 +271,16 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
     @Override
     public void onItemClick(int movieId) {
         startActivity(MovieDetailActivity.newIntent(this, movieId));
+    }
+
+    //On Retry Click
+    @Override
+    public void onSnackbarClick() {
+        if (mSortOrder == MainActivity.SORT_ORDER.POPULAR)
+            mMoviesPresenter.getPopularMovies(Constants.API_KEY, page);
+        else if (mSortOrder == MainActivity.SORT_ORDER.TOP_RATED)
+            mMoviesPresenter.getTopRatedMovies(Constants.API_KEY, page);
+        dismissSnackbar();
     }
 
     private enum SORT_ORDER {

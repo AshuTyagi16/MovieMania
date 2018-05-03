@@ -53,7 +53,6 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
     @BindView(R.id.iv_placeholder)
     ImageView mIvPlaceholder;
 
-
     private int mMovieId;
 
     private static final String EXTRA_MOVIE_ID = "movie_id";
