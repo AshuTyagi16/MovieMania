@@ -29,8 +29,6 @@ public abstract class BaseFragment extends Fragment implements NetworkView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mNetworkPresenter = new NetworkPresenterImpl(this);
-        mNetworkPresenter.checkNetworkConnection();
     }
 
     @Nullable
@@ -38,6 +36,8 @@ public abstract class BaseFragment extends Fragment implements NetworkView {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutResId(), container, false);
         ButterKnife.bind(this, view);
+        mNetworkPresenter = new NetworkPresenterImpl(this);
+        mNetworkPresenter.checkNetworkConnection();
         return view;
     }
 }
