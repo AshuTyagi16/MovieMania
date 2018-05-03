@@ -2,7 +2,6 @@ package com.sasuke.moviedb.activity;
 
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -12,12 +11,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.androidadvance.topsnackbar.TSnackbar;
 import com.paginate.Paginate;
 import com.sasuke.moviedb.R;
 import com.sasuke.moviedb.adapter.MoviesAdapter;
 import com.sasuke.moviedb.config.Constants;
 import com.sasuke.moviedb.event.NetworkChangedEvent;
+import com.sasuke.moviedb.manager.PreferenceManager;
 import com.sasuke.moviedb.model.MoviesPresenterImpl;
 import com.sasuke.moviedb.model.pojo.Result;
 import com.sasuke.moviedb.presenter.MoviesPresenter;
@@ -88,8 +87,12 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
 
     @Override
     public void onNetworkFailed() {
-        loading = false;
-        showNetworkFailurePlaceholder();
+        if (!PreferenceManager.getInstance().isDataInCache())
+            showNetworkFailurePlaceholder();
+        else {
+            setPagination();
+            loadLastState();
+        }
     }
 
     @Override
@@ -118,10 +121,7 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
     public void onLoadMore() {
         loading = true;
         if (!isFirstAttempt) {
-            if (mSortOrder == SORT_ORDER.POPULAR)
-                mMoviesPresenter.getPopularMovies(Constants.API_KEY, page);
-            else if (mSortOrder == SORT_ORDER.TOP_RATED)
-                mMoviesPresenter.getTopRatedMovies(Constants.API_KEY, page);
+            loadLastState();
         }
     }
 
@@ -190,10 +190,7 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
                 mIvPlaceholder.setVisibility(View.GONE);
                 mPbMovies.setVisibility(View.VISIBLE);
             }
-            if (mSortOrder == SORT_ORDER.POPULAR)
-                mMoviesPresenter.getPopularMovies(Constants.API_KEY, page);
-            else if (mSortOrder == SORT_ORDER.TOP_RATED)
-                mMoviesPresenter.getTopRatedMovies(Constants.API_KEY, page);
+            loadLastState();
             dismissSnackbar();
         }
     }
@@ -246,6 +243,7 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
     }
 
     private void handleSuccess(Result result) {
+        PreferenceManager.getInstance().updateCacheStatus(true);
         dismissSnackbar();
         isFirstAttempt = false;
         loading = false;
@@ -272,11 +270,15 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
     //On Retry Click
     @Override
     public void onSnackbarClick() {
+        loadLastState();
+        dismissSnackbar();
+    }
+
+    private void loadLastState() {
         if (mSortOrder == MainActivity.SORT_ORDER.POPULAR)
             mMoviesPresenter.getPopularMovies(Constants.API_KEY, page);
         else if (mSortOrder == MainActivity.SORT_ORDER.TOP_RATED)
             mMoviesPresenter.getTopRatedMovies(Constants.API_KEY, page);
-        dismissSnackbar();
     }
 
     private enum SORT_ORDER {
