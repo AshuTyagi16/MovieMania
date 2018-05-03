@@ -78,16 +78,12 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
         mMoviesAdapter = new MoviesAdapter();
         mMoviesAdapter.setOnItemClickListener(MainActivity.this);
         mRvMovies.setAdapter(mMoviesAdapter);
-        setPagination();
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public void onNetworkAvailable() {
-        if (mSortOrder == SORT_ORDER.POPULAR)
-            mMoviesPresenter.getPopularMovies(Constants.API_KEY, INITIAL_PAGE);
-        else if (mSortOrder == SORT_ORDER.TOP_RATED)
-            mMoviesPresenter.getTopRatedMovies(Constants.API_KEY, INITIAL_PAGE);
+        setPagination();
     }
 
     @Override
