@@ -1,7 +1,7 @@
 package com.sasuke.moviedb.model;
 
+import com.sasuke.moviedb.MovieMania;
 import com.sasuke.moviedb.model.pojo.Result;
-import com.sasuke.moviedb.network.MovieManiaApi;
 import com.sasuke.moviedb.presenter.MoviesPresenter;
 import com.sasuke.moviedb.view.MoviesView;
 
@@ -23,7 +23,7 @@ public class MoviesPresenterImpl implements MoviesPresenter {
 
     @Override
     public void getPopularMovies(String api_key, int page) {
-        MovieManiaApi.getInstance().getPopularMovies(api_key, page).enqueue(new Callback<Result>() {
+        MovieMania.getAppContext().getMovieManiaService().getPopularMovies(api_key, page).enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
                 mMoviesView.onGetPopularMoviesSuccess(response.body());
@@ -38,7 +38,7 @@ public class MoviesPresenterImpl implements MoviesPresenter {
 
     @Override
     public void getTopRatedMovies(String api_key, int page) {
-        MovieManiaApi.getInstance().getTopRatedMovies(api_key, page).enqueue(new Callback<Result>() {
+        MovieMania.getAppContext().getMovieManiaService().getTopRatedMovies(api_key, page).enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
                 mMoviesView.onGetTopRatedSuccess(response.body());

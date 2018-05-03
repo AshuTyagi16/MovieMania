@@ -24,6 +24,7 @@ dependencies {
     final OKHTTP_VERSION = '3.10.0'
     final PICASSO_VERSION = '2.71828'
     final BUTTERKNIFE_VERSION = '8.8.1'
+    final DAGGER_VERSION = '2.15'
 
     //Test
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -51,9 +52,14 @@ dependencies {
 
     //Picasso
     implementation "com.squareup.picasso:picasso:$PICASSO_VERSION"
+    implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
 
     //Data
     implementation "com.google.code.gson:gson:2.8.2"
+
+    //Dependency Injection
+    implementation "com.google.dagger:dagger:$DAGGER_VERSION"
+    annotationProcessor "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
 
     /********Others********/
 
@@ -71,5 +77,8 @@ dependencies {
 
     //EventBus
     implementation 'org.greenrobot:eventbus:3.1.1'
+
+    //Logging
+    implementation 'com.jakewharton.timber:timber:4.7.0'
 
 }

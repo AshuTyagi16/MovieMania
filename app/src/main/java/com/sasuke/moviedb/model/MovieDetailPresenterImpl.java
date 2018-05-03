@@ -1,7 +1,7 @@
 package com.sasuke.moviedb.model;
 
+import com.sasuke.moviedb.MovieMania;
 import com.sasuke.moviedb.model.pojo.MovieDetail;
-import com.sasuke.moviedb.network.MovieManiaApi;
 import com.sasuke.moviedb.presenter.MovieDetailPresenter;
 import com.sasuke.moviedb.view.MovieDetailView;
 
@@ -23,7 +23,7 @@ public class MovieDetailPresenterImpl implements MovieDetailPresenter {
 
     @Override
     public void getMovieDetail(String apiKey, int movieId) {
-        MovieManiaApi.getInstance().getMovieDetail(apiKey, movieId).enqueue(new Callback<MovieDetail>() {
+        MovieMania.getAppContext().getMovieManiaService().getMovieDetail(movieId, apiKey).enqueue(new Callback<MovieDetail>() {
             @Override
             public void onResponse(Call<MovieDetail> call, Response<MovieDetail> response) {
                 mMovieDetailView.onGetMovieDetailSuccess(response.body());

@@ -8,6 +8,7 @@ import com.sasuke.moviedb.R;
 import com.sasuke.moviedb.model.pojo.Movie;
 import com.sasuke.moviedb.model.pojo.Result;
 import com.sasuke.moviedb.view.MoviesViewHolder;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +21,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesViewHolder> implem
 
     private List<Movie> mMovieList = new ArrayList<>();
     private OnItemClickListener mOnItemClickListener;
+    private Picasso picasso;
+
+    public MoviesAdapter(Picasso picasso) {
+        this.picasso = picasso;
+    }
 
     @Override
     public MoviesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new MoviesViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.cell_movie, parent, false));
+                .inflate(R.layout.cell_movie, parent, false), picasso);
     }
 
     @Override

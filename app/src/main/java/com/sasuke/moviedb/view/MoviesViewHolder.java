@@ -28,12 +28,14 @@ public class MoviesViewHolder extends RecyclerView.ViewHolder {
 
     private OnItemClickListener mOnItemClickListener;
     private int movieId;
+    private final Picasso picasso;
 
     private MovieManiaDatabaseAdapter mDatabaseAdapter;
 
-    public MoviesViewHolder(View itemView) {
+    public MoviesViewHolder(View itemView, Picasso picasso) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+        this.picasso = picasso;
         mDatabaseAdapter = MovieManiaDatabaseAdapter.getInstance(itemView.getContext());
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +58,7 @@ public class MoviesViewHolder extends RecyclerView.ViewHolder {
 
     public void setMovie(Movie movie) {
         movieId = movie.getId();
-        Picasso.get()
+        picasso
                 .load(Constants.IMAGE_BASE_URL.concat(movie.getPosterPath()))
                 .placeholder(R.drawable.placeholder_image_loading)
                 .error(R.drawable.placeholder_image_error)

@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sasuke.moviedb.MovieMania;
 import com.sasuke.moviedb.R;
 import com.sasuke.moviedb.config.Constants;
 import com.sasuke.moviedb.db.MovieManiaDatabaseAdapter;
@@ -65,6 +66,8 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
 
     private MovieManiaDatabaseAdapter mDatabaseAdapter;
 
+    private Picasso picasso;
+
     private int movieId;
 
     @Override
@@ -87,6 +90,7 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
             mMovieId = getArguments().getInt(EXTRA_MOVIE_ID);
         mMovieDetailPresenter = new MovieDetailPresenterImpl(this);
         mDatabaseAdapter = MovieManiaDatabaseAdapter.getInstance(getContext());
+        picasso = MovieMania.getAppContext().getPicasso();
     }
 
     @Override
@@ -105,7 +109,7 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
             movieId = movieDetail.getId();
             mTvMovieName.setText(movieDetail.getTitle());
 
-            Picasso.get()
+            picasso
                     .load(Constants.IMAGE_BASE_URL.concat(movieDetail.getPosterPath()))
                     .placeholder(R.drawable.placeholder_image_loading)
                     .error(R.drawable.placeholder_error_occured)

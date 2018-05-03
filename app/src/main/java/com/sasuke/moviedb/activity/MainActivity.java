@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.paginate.Paginate;
+import com.sasuke.moviedb.MovieMania;
 import com.sasuke.moviedb.R;
 import com.sasuke.moviedb.adapter.MoviesAdapter;
 import com.sasuke.moviedb.config.Constants;
@@ -74,7 +75,7 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
         mRvMovies.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
         mRvMovies.addItemDecoration(new ItemDecorator(SPACING));
         mRvMovies.setItemAnimator(new SlideInLeftAnimator());
-        mMoviesAdapter = new MoviesAdapter();
+        mMoviesAdapter = new MoviesAdapter(MovieMania.getAppContext().getPicasso());
         mMoviesAdapter.setOnItemClickListener(MainActivity.this);
         mRvMovies.setAdapter(mMoviesAdapter);
         super.onCreate(savedInstanceState);

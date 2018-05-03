@@ -12,7 +12,7 @@ import retrofit2.http.Query;
  * Created by abc on 5/1/2018.
  */
 
-public interface MovieManiaApiInterface {
+public interface MovieManiaService {
 
     @GET("movie/popular")
     Call<Result> getPopularMovies(@Query("api_key") String api_key, @Query("page") int page);
