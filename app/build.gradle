@@ -52,7 +52,6 @@ dependencies {
 
     //Picasso
     implementation "com.squareup.picasso:picasso:$PICASSO_VERSION"
-    implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
 
     //Data
     implementation "com.google.code.gson:gson:2.8.2"
@@ -68,9 +67,6 @@ dependencies {
 
     //Pagination
     implementation 'com.github.markomilos:paginate:0.5.1'
-
-    //Recyclerview Animation
-    implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
 
     //Snackbar
     implementation 'com.androidadvance:topsnackbar:1.1.1'

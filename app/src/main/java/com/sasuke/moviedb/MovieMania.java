@@ -6,6 +6,7 @@ import android.app.Application;
 import com.sasuke.moviedb.di.component.DaggerMovieManiaApplicationComponent;
 import com.sasuke.moviedb.di.component.MovieManiaApplicationComponent;
 import com.sasuke.moviedb.di.module.ContextModule;
+import com.sasuke.moviedb.di.module.DatabaseModule;
 import com.sasuke.moviedb.manager.NetworkManager;
 import com.sasuke.moviedb.manager.PreferenceManager;
 
@@ -28,6 +29,7 @@ public class MovieMania extends Application {
 
         component = DaggerMovieManiaApplicationComponent.builder()
                 .contextModule(new ContextModule(this))
+                .databaseModule(new DatabaseModule(this))
                 .build();
 
         networkManager = component.getNetworkManager();

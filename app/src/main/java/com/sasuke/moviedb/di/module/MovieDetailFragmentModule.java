@@ -31,10 +31,4 @@ public class MovieDetailFragmentModule {
     public MovieDetailPresenter getMovieDetailPresenter(MovieManiaService movieManiaService) {
         return new MovieDetailPresenterImpl(movieManiaService, movieDetailView);
     }
-
-    @Provides
-    @PerActivityScope
-    public MovieManiaDatabaseAdapter getDatabaseAdapter() {
-        return MovieManiaDatabaseAdapter.getInstance(movieDetailActivity);
-    }
 }

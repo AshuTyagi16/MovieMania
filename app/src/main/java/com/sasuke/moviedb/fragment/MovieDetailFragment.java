@@ -115,7 +115,7 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailView
 
     @Override
     public void onGetMovieDetailSuccess(MovieDetail movieDetail) {
-        if (movieDetail != null) {
+        if (movieDetail != null && getContext() != null) {
             mMovieId = movieDetail.getId();
             mTvMovieName.setText(movieDetail.getTitle());
 

@@ -1,5 +1,7 @@
 package com.sasuke.moviedb.di.component;
 
+import com.sasuke.moviedb.db.MovieManiaDatabaseAdapter;
+import com.sasuke.moviedb.di.module.DatabaseModule;
 import com.sasuke.moviedb.di.module.MovieManiaServiceModule;
 import com.sasuke.moviedb.di.module.NetworkManagerModule;
 import com.sasuke.moviedb.di.module.PicassoModule;
@@ -17,7 +19,9 @@ import dagger.Component;
  */
 
 @MovieManiaApplicationScope
-@Component(modules = {MovieManiaServiceModule.class, PicassoModule.class, NetworkManagerModule.class, PreferenceManagerModule.class})
+@Component(modules = {MovieManiaServiceModule.class, PicassoModule.class,
+        NetworkManagerModule.class, PreferenceManagerModule.class,
+        DatabaseModule.class})
 public interface MovieManiaApplicationComponent {
     Picasso getPicasso();
 
@@ -26,4 +30,6 @@ public interface MovieManiaApplicationComponent {
     NetworkManager getNetworkManager();
 
     PreferenceManager getPreferenceManager();
+
+    MovieManiaDatabaseAdapter getDatabaseAdapter();
 }

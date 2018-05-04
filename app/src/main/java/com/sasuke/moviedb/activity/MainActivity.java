@@ -36,16 +36,18 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
 public class MainActivity extends BaseActivity implements MoviesView, Paginate.Callbacks, MoviesAdapter.OnItemClickListener {
 
     @BindView(R.id.rl)
     RelativeLayout mRlView;
+
     @BindView(R.id.rv_movies)
     RecyclerView mRvMovies;
+
     @BindView(R.id.pb_movies)
     CircularProgressBar mPbMovies;
+
     @BindView(R.id.iv_placeholder)
     ImageView mIvPlaceholder;
 
@@ -86,7 +88,6 @@ public class MainActivity extends BaseActivity implements MoviesView, Paginate.C
 
         mRvMovies.setLayoutManager(mGridLayoutManager);
         mRvMovies.addItemDecoration(mItemDecorator);
-        mRvMovies.setItemAnimator(new SlideInLeftAnimator());
         mMoviesAdapter.setOnItemClickListener(MainActivity.this);
         mRvMovies.setAdapter(mMoviesAdapter);
         setActionBarTitle(getString(R.string.popular));

@@ -67,12 +67,6 @@ public class MainActivityModule {
 
     @Provides
     @PerActivityScope
-    public MovieManiaDatabaseAdapter getDatabaseAdapter() {
-        return MovieManiaDatabaseAdapter.getInstance(mainActivity);
-    }
-
-    @Provides
-    @PerActivityScope
     public LoadingListItemCreator getLoadingListItemCreator() {
         return new LoadingListItemCreator();
     }
